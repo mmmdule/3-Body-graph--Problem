@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            font-family: "Roboto Slab", Sans-serif;
+        }
+
+        #choiceButtonDiv {
+            display: grid;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button[id^="choice"] {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #f9c816;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: black;
+            transition: 0.3s;
+
+        }
+
+        button[id^="choice"]:hover {
+            background-color: #D9B32A;
+            /*#1e97dd;*/
+            transform: scale(1.05);
+        }
+
+        div[id^="hdFormDiv"] {
+            display: none;
+            /* justify-content: center;
+            align-items: center; */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="choiceButtonDiv">
+        <button id="choice1"> >> ✨ LIČNI HUMAN DESIGN REPORT ✨ << <br> "Moj Human Design" </button>
+        <button id="choice2"> >> 💼 POSLOVNI HUMAN DESIGN REPORT 💼 << <br> "Business Human Design" </button>
+        <button id="choice3"> >> ❓ TREĆI HUMAN DESIGN REPORT ❓ << <br> "Neki Human Design" </button>
+    </div>
+
+    <div id="hdFormDiv1">
+        <script src="https://embed.bodygraphchart.com/v1/18147/js?token=9f574598-664f-4b53-a147-8754aeaf811a"
+            defer></script>
+    </div>
+    <div id="hdFormDiv2">
+        <script src="https://embed.bodygraphchart.com/v1/20968/js?token=9f574598-664f-4b53-a147-8754aeaf811a"
+            defer></script>
+    </div>
+    <div id="hdFormDiv3">
+        <script src="https://embed.bodygraphchart.com/v1/20969/js?token=9f574598-664f-4b53-a147-8754aeaf811a"
+            defer></script>
+    </div>
+    <script>
+        const downSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white"><path d="M12 2a10 10 0 1 0 10 10A10.011 10.011 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8z"/><path d="M13 13.586V8h-2v5.586l-2.293-2.293-1.414 1.414L12 17.414l4.707-4.707-1.414-1.414L13 13.586z"/></svg>';
+        const newSvg = '<svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="white" viewBox="0 0 16 16" style="margin-right: 5px;"><path d="M8 0a8 8 0 1 0 8 8 8 8 0 0 0-8-8zm0 15a7 7 0 1 1 7-7 7 7 0 0 1-7 7z"/><path d="M9 4H7v3H4v2h3v3h2V9h3V7H9V4z"/></svg>';
+        const description = 'Zavirite u svoj jedinstveni Human Design!<br><br>Besplatno preuzmite svoj lični izveštaj';
+
+        function addEventToSubmit() {
+            let timer = setInterval(findDownBtn, 1500);
+
+            function findDownBtn() {
+                let submit = document.getElementById("hdapi-submit");
+                submit.disabled = true;
+                if (submit !== null) {
+                    clearInterval(timer);
+                    submit.addEventListener('click', addDownSvg);
+                    return;
+                }
+            }
+        }
+
+        function addDownSvg() {
+            let timer = setInterval(findDownBtn, 1500);
+
+            function findDownBtn() {
+                let downBtn = document.getElementById("hdapi-download-pdf-report");
+                if (downBtn !== null) {
+                    clearInterval(timer);
+                    downBtn.innerHTML = downSvg + downBtn.innerHTML;
+                    downBtn.style.fontWeight = "bold";
+
+
+                    let newBtn = document.getElementById("hdapi-new-chart");
+                    newBtn.innerHTML = newSvg + newBtn.innerHTML;
+                    newBtn.style.fontWeight = "bold";
+                    newBtn.focus();
+                    newBtn.blur();
+
+                    document.querySelector(".hdapi-report-description").innerHTML = description;
+                    return;
+                }
+                console.log("Didn't find download - " + Date.now());
+            }
+        }
+
+        function addEmailListener() {
+            let timer = setInterval(findEmailField, 1500);
+
+            function findEmailField() {
+                let emailField = document.getElementById("email_address");
+                if (emailField !== null) {
+                    clearInterval(timer);
+
+                    let submit = document.getElementById("hdapi-submit");
+                    submit.disabled = true;
+
+                    //onBlur fetch https://notion-node-app.onrender.com/email-exists
+                    //and send json with "email" property and emailField.value
+                    emailField.onblur = async function () {
+                        emailField.value = emailField.value.trim();
+                        let email = emailField.value;
+                        if (email === "")
+                            return;
+
+                        submit.disabled = true;
+
+                        let response = await fetch("https://notion-node-app.onrender.com/email-exists", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                email: email
+                            })
+                        });
+                        // server responds {"exists": true} if email exists (is in databasem therefore it's invalid)
+                        let json = await response.json(); //parses response body as json object into variable object
+                        if (json.exists) {
+                            emailField.style.border = "2px solid red";
+                            emailField.style.borderRadius = "5px";
+                            emailField.style.boxShadow = "0 0 5px red";
+                            emailField.setCustomValidity("Adresa je već upotrebljena.");
+                            submit.style.cursor = "not-allowed";
+                        }
+                        else {
+                            emailField.style.border = "2px solid green";
+                            emailField.style.borderRadius = "5px";
+                            emailField.style.boxShadow = "0 0 5px green";
+                            emailField.setCustomValidity("");
+                            submit.style.cursor = "pointer";
+                            submit.disabled = false;
+                        }
+                    }
+                    return;
+                }
+            }
+        }
+
+        //make an array of all the buttons
+        let buttons = document.querySelectorAll('button[id^="choice"]');
+        //make an array of all the divs
+        let divs = document.querySelectorAll('div[id^="hdFormDiv"]');
+        //loop through the buttons
+        for (let i = 0; i < buttons.length; i++) {
+            //add an event listener to each button
+            buttons[i].addEventListener('click', function () {
+                //remove the divs that aren't the one that corresponds to the button from the HTML completely
+                for (let j = 0; j < divs.length; j++) {
+                    if (j !== i) {
+                        divs[j].remove();
+                    }
+                }
+
+                //show the div that corresponds to the button
+                divs[i].style.display = 'block';
+                document.querySelector('#choiceButtonDiv').remove();
+
+                if (window.location.href.indexOf("#chart") !== -1) //if contains #chart in url
+                    addDownSvg();
+                else {
+                    addEventToSubmit();
+                    addEmailListener();
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
