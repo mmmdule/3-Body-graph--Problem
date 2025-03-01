@@ -46,6 +46,7 @@
 
 <body>
     <div id="choiceButtonDiv">
+        <h2></h2>
         <button id="choice1"> >> ✨ LIČNI HUMAN DESIGN REPORT ✨ << <br> "Moj Human Design" </button>
         <button id="choice2"> >> 💼 POSLOVNI HUMAN DESIGN REPORT 💼 << <br> "Business Human Design" </button>
         <button id="choice3"> >> ❓ TREĆI HUMAN DESIGN REPORT ❓ << <br> "Neki Human Design" </button>
@@ -178,13 +179,18 @@
                 divs[i].style.display = 'block';
                 document.querySelector('#choiceButtonDiv').remove();
 
-                if (window.location.href.indexOf("#chart") !== -1) //if contains #chart in url
+                if (window.location.href.indexOf("#chart") !== -1) {//if contains #chart in url
                     addDownSvg();
+                }
                 else {
                     addEventToSubmit();
                     addEmailListener();
                 }
             });
+        }
+
+        if (window.location.href.indexOf("#chart") !== -1) {//if contains #chart in url
+            document.querySelector("#choiceButtonDiv > h2").innerHTML = "Izaberite vrstu izveštaja za Vaš Human Design";
         }
     </script>
 </body>
