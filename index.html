@@ -148,10 +148,11 @@
                             emailField.style.borderRadius = "5px";
                             emailField.style.boxShadow = "0 0 5px red";
                             emailField.setCustomValidity("Adresa je već upotrebljena.");
+                            emailField.reportValidity();
                             submit.style.cursor = "not-allowed";
                             submit.style.background = "#aeaeae";
-                            submit.title="Adresa je već upotrebljena."
-                            submit.value="Adresa je već upotrebljena"
+                            //submit.title="Adresa je već upotrebljena."
+                            //submit.value="Adresa je već upotrebljena"
                         }
                         else {
                             emailField.style.border = "2px solid green";
