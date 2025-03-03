@@ -107,8 +107,8 @@
             }
         }
 
-        function addEmailListener() {
-            let timer = setInterval(findEmailField, 1500);
+        function addEmailListener() { //runs automatically on startup if not results page
+            let timer = setInterval(findEmailField, 200);
 
             function findEmailField() {
                 let emailField = document.getElementById("email_address");
@@ -116,6 +116,10 @@
                     clearInterval(timer);
 
                     let submit = document.getElementById("hdapi-submit");
+                    submit.style.background = "#aeaeae";
+                    submit.title="Popunite sva polja pre prijave"
+                    submit.value="Popunite sva polja pre prijave"
+                    submit.style.cursor = "not-allowed";
                     submit.disabled = true;
 
                     //onBlur fetch https://notion-node-app.onrender.com/email-exists
@@ -145,6 +149,9 @@
                             emailField.style.boxShadow = "0 0 5px red";
                             emailField.setCustomValidity("Adresa je već upotrebljena.");
                             submit.style.cursor = "not-allowed";
+                            submit.style.background = "#aeaeae";
+                            submit.title="Adresa je već upotrebljena."
+                            submit.value="Adresa je već upotrebljena"
                         }
                         else {
                             emailField.style.border = "2px solid green";
@@ -152,7 +159,10 @@
                             emailField.style.boxShadow = "0 0 5px green";
                             emailField.setCustomValidity("");
                             submit.style.cursor = "pointer";
+                            submit.style.background = "#000000";
                             submit.disabled = false;
+                            submit.title=""
+                            submit.value="Prikaži Human Design Chart"
                         }
                     }
                     return;
@@ -184,7 +194,7 @@
                 }
                 else {
                     addEventToSubmit();
-                    addEmailListener();
+                    addEmailListener(); 
                 }
             });
         }
